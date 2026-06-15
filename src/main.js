@@ -14,7 +14,10 @@ import {initFiltering} from "./components/filtering.js";
 import {initSearching} from "./components/searching.js";
 
 // Исходные данные используемые в render()
-const {data, ...indexes} = initData(sourceData);
+// const {data, ...indexes} = initData(sourceData);
+
+const api = initData(sourceData);
+
 
 /**
  * Сбор и обработка полей из таблицы
@@ -36,18 +39,34 @@ function collectState() {
  * Перерисовка состояния таблицы при любых изменениях
  * @param {HTMLButtonElement?} action
  */
-function render(action) {
+// function render(action) {
+//     let state = collectState(); // состояние полей из таблицы
+//     let result = [...data]; // копируем для последующего изменения
+//     // @todo: использование
+//     // result = applySearch(result, state, action);
+//     // result = applyFiltering(result, state, action);
+//     // result = applySorting(result, state, action);
+//     // result = applyPagination(result, state, action);
+
+//     sampleTable.render(result)
+// }
+
+async function render(action) {
     let state = collectState(); // состояние полей из таблицы
-    let result = [...data]; // копируем для последующего изменения
+
+    // Шаг 2.1: Заменяем копирование данных на пустой объект параметров запроса
+    let query = {};
+
     // @todo: использование
     // result = applySearch(result, state, action);
     // result = applyFiltering(result, state, action);
     // result = applySorting(result, state, action);
     // result = applyPagination(result, state, action);
 
-    sampleTable.render(result)
-}
+    const { total, items } = await api.getRecords(query);
 
+    sampleTable.render(items);
+}
 const sampleTable = initTable({
     tableTemplate: 'table',
     rowTemplate: 'row',
@@ -82,4 +101,8 @@ const applySearch = initSearching('search');
 const appRoot = document.querySelector('#app');
 appRoot.appendChild(sampleTable.container);
 
-render();
+async function init() {
+    const indexes = await api.getIndexes();
+}
+
+init().then(render);
