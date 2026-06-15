@@ -23,13 +23,15 @@ const {data, ...indexes} = initData(sourceData);
 function collectState() {
     const state = processFormData(new FormData(sampleTable.container));
 
-    const rowsPerPage = parseInt(state.rowsPerPage);
-    const page = parseInt(state.page ?? 1);
+    const totalFrom = state.totalFrom ? parseInt(state.totalFrom) : '';
+    const totalTo = state.totalTo ? parseInt(state.totalTo) : '';
 
     return {
         ...state,
         rowsPerPage,
-        page
+        page,
+        totalFrom,
+        totalTo
     };
 }
 
