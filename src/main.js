@@ -14,8 +14,6 @@ import {initFiltering} from "./components/filtering.js";
 import {initSearching} from "./components/searching.js";
 
 // Исходные данные используемые в render()
-// const {data, ...indexes} = initData(sourceData);
-
 const api = initData(sourceData);
 
 
@@ -39,34 +37,21 @@ function collectState() {
  * Перерисовка состояния таблицы при любых изменениях
  * @param {HTMLButtonElement?} action
  */
-// function render(action) {
-//     let state = collectState(); // состояние полей из таблицы
-//     let result = [...data]; // копируем для последующего изменения
-//     // @todo: использование
-//     // result = applySearch(result, state, action);
-//     // result = applyFiltering(result, state, action);
-//     // result = applySorting(result, state, action);
-//     // result = applyPagination(result, state, action);
-
-//     sampleTable.render(result)
-// }
-
 async function render(action) {
     let state = collectState(); // состояние полей из таблицы
-
-    // Шаг 2.1: Заменяем копирование данных на пустой объект параметров запроса
-    let query = {};
-
-    // @todo: использование
-    // result = applySearch(result, state, action);
+    let query = {}; // здесь будут формироваться параметры запроса
+    // другие apply*
+    // result = applySearching(result, state, action);
     // result = applyFiltering(result, state, action);
     // result = applySorting(result, state, action);
-    // result = applyPagination(result, state, action);
+    query = applyPagination(query, state, action); // обновляем query
 
-    const { total, items } = await api.getRecords(query);
+    const { total, items } = await api.getRecords(query); // запрашиваем данные с собранными параметрами
 
+    updatePagination(total, query); // перерисовываем пагинатор
     sampleTable.render(items);
 }
+
 const sampleTable = initTable({
     tableTemplate: 'table',
     rowTemplate: 'row',
@@ -75,7 +60,7 @@ const sampleTable = initTable({
 }, render);
 
 // @todo: инициализация
-const applyPagination = initPagination(
+const { applyPagination, updatePagination } = initPagination(
     sampleTable.pagination.elements,
     (el, page, isCurrent) => {
         const input = el.querySelector('input');
