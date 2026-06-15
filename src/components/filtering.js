@@ -27,8 +27,17 @@ export function initFiltering(elements, indexes) {
             if (input) {
                 input.value = '';
                 const fieldName = action.dataset.field;
-                state[fieldName] = '';
+                state[fieldName] = undefined;
             }
+        }
+
+        if (state.totalFrom || state.totalTo) {
+            state.total = [
+                state.totalFrom ? parseInt(state.totalFrom, 10) : null,
+                state.totalTo ? parseInt(state.totalTo, 10) : null
+            ];
+        } else {
+            delete state.total;
         }
 
         // @todo: #4.5 — отфильтровать данные используя компаратор
