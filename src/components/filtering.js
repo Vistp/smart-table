@@ -28,6 +28,16 @@ export function initFiltering(elements) {
         Object.keys(elements).forEach(key => {
             if (elements[key]) {
                 if (['INPUT', 'SELECT'].includes(elements[key].tagName) && elements[key].value) { // ищем поля ввода в фильтре с непустыми данными
+
+                    // Проверка по для инпута даты
+                    if (elements[key].name === 'date') {
+                        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+
+                        if (!dateRegex.test(elements[key].value)) {
+                            return;
+                        }
+                    }
+
                     filter[`filter[${elements[key].name}]`] = elements[key].value; // чтобы сформировать в query вложенный объект фильтра
                 }
             }

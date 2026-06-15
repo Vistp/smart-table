@@ -11,7 +11,6 @@ export function initTable(settings, onAction) {
     const {tableTemplate, rowTemplate, before, after} = settings;
     const root = cloneTemplate(tableTemplate);
 
-    // console.log(before, after);
     // @todo: #1.2 —  вывести дополнительные шаблоны до и после таблицы
     if (before) {
         before.toReversed().forEach(item => {
@@ -45,7 +44,7 @@ export function initTable(settings, onAction) {
         // @todo: #1.1 — преобразовать данные в массив строк на основе шаблона rowTemplate
         const nextRows = data.map(item => {
             const row = cloneTemplate(rowTemplate);
-// console.log(item);
+
             Object.keys(item).forEach(key => {
                 if (row.elements[key]) {
                     row.elements[key].textContent = item[key];
