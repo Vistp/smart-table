@@ -13,6 +13,20 @@ export const initPagination = ({pages, fromRow, toRow, totalRows}, createPage) =
         let page = state.page;
 
         // @todo: #2.6 — обработать действия
+        if (action) switch(action.name) {
+            case 'prev':
+                page = Math.max(1, page - 1);
+                break;
+            case 'next':
+                page = Math.min(pageCount, page + 1);
+                break;
+            case 'first':
+                page = 1;
+                break;
+            case 'last':
+                page = pageCount;
+                break;
+        }
 
         // @todo: #2.4 — получить список видимых страниц и вывести их
         const visiblePages = getPages(page, pageCount, 5);
@@ -24,6 +38,9 @@ export const initPagination = ({pages, fromRow, toRow, totalRows}, createPage) =
         }))
 
         // @todo: #2.5 — обновить статус пагинации
+        fromRow.textContent = (page - 1) * rowsPerPage + 1;
+        toRow.textContent = Math.min((page * rowsPerPage), data.length);
+        totalRows.textContent = data.length;
 
         // @todo: #2.2 — посчитать сколько строк нужно пропустить и получить срез данных
         const skip = (page - 1) * rowsPerPage;
